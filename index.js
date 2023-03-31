@@ -52,16 +52,7 @@ app.get("/orders", function (req, res) {
 // เรียงลับดับจากคนที่ซื้อเยอะ => น้อยที่สุด
 app.get("/top_customers", function (req, res) {
   connection.query(
-    `SELECT 
-    C.FirstName, 
-    SUM(O.quantity*P.ราคา) AS price_sum 
-  FROM a1_customer AS C 
-    INNER JOIN a1_order AS O ON C.ID = O.id 
-    INNER JOIN a1_food AS P ON O.id = P.ID
-  GROUP BY 
-    C.ID
-  ORDER BY 
-    price_sum DESC;`,
+    `SELECT C.FirstName, SUM(O.quantity*P.ราคา) AS price_sum FROM a1_customer AS C INNER JOIN a1_order AS O ON C.ID = O.customer_id INNER JOIN a1_food AS P ON O.product_id = P.ID GROUP BY C.ID ORDER BY price_sum DESC;`,
     function (err, results) {
       res.json(results);
     }
